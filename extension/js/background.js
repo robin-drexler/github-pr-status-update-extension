@@ -34,6 +34,14 @@ function updateHandler() {
   });
 }
 
+function notificationClickHandler(notifictionId) {
+  chrome.notifications.clear(notifictionId);
+
+  chrome.tabs.create({ url: notifictionId }, ({ windowId }) => {
+    chrome.windows.update(windowId, { focused: true });
+  });
+}
+
 chrome.tabs.onUpdated.addListener(updateHandler);
 chrome.tabs.onActivated.addListener(updateHandler);
 
@@ -94,7 +102,8 @@ function checkStatuses() {
           title: "PR status changed",
           message: `${owner}/${repository}#${number} is now ${newStatus}`,
           iconUrl: "./img/icons/icon_256.png",
-          buttons: [{ title: "show" }]
+          buttons: [{ title: "show" }],
+          requireInteraction: true
         });
 
         chrome.storage.local.set({
