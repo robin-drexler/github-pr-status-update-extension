@@ -33,7 +33,7 @@
     "last 3 firefox versions"
   ],
   "dependencies": {
-    "@types/chrome": "^0.0.86",
+    "@types/firefox-webext-browser": "^67.0.2",
     "webextension-polyfill": "^0.4.0"
   }
 }
