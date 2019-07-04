@@ -36,6 +36,7 @@ export function extractPrData(data) {
       repository: {
         pullRequest: {
           url,
+          title,
           commits: {
             nodes: [
               {
@@ -52,6 +53,7 @@ export function extractPrData(data) {
 
   return {
     url,
-    status
+    status,
+    title,
   };
 }

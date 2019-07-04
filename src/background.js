@@ -8,13 +8,13 @@
 const TOKEN = ``;
 
 import queryPr, { extractPrData } from "./query-pr.js";
-
+console.log("THINGS");
 function matchUrl(url) {
   return url.match(
     /github\.com\/(?<owner>.*?)\/(?<repository>.*?)\/pull\/(?<number>\d+)/
   );
 }
-
+//
 function getStorageKey({ owner, repository, number }) {
   return `${owner}/${repository}/${number}`;
 }
@@ -89,12 +89,18 @@ function checkStatuses() {
     Object.values(items).map(async item => {
       const { owner, repository, number, status } = item;
       const storageKey = getStorageKey({ owner, repository, number });
-      console.log("checking", storageKey);
       const pr = await queryPr({ owner, repository, number, token: TOKEN });
       if (pr.errors) {
         return;
       }
       const { status: newStatus, url } = extractPrData(pr);
+      console.log(
+        "checking",
+        storageKey,
+        status,
+        newStatus,
+        status === newStatus
+      );
 
       if (newStatus !== status) {
         chrome.notifications.create(url, {
@@ -114,16 +120,27 @@ function checkStatuses() {
   });
 }
 
+chrome.notifications.onButtonClicked.addListener(notificationClickHandler);
+chrome.notifications.onClicked.addListener(notificationClickHandler);
+
 window.setInterval(checkStatuses, 30000);
 checkStatuses();
-
-chrome.notifications.onButtonClicked.addListener(id => {
-  chrome.tabs.create({ url: id });
-});
-chrome.notifications.onClicked.addListener(id => {
-  chrome.tabs.create({ url: id });
-});
 
 // window.setInterval(() => {
 //   console.log("hello");
 // }, 5000);
+
+const DEBUGFUNCTIONS = {
+  createNotification() {
+    chrome.notifications.create("https://google.com", {
+      type: "basic",
+      title: "PR status changed",
+      message: `test test `,
+      iconUrl: "./img/icons/icon_256.png",
+      buttons: [{ title: "show" }],
+      requireInteraction: true
+    });
+  }
+};
+
+// DEBUGFUNCTIONS.createNotification();
