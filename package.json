@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:background": "parcel build --out-dir extension/dist/background src/background.js"
+    "build:background": "parcel build --out-dir extension/dist/background src/background.js",
+    "watch:background": "parcel watch --out-dir extension/dist/background src/background.js --no-hmr"
   },
   "repository": {
     "type": "git",
@@ -30,5 +31,9 @@
   "browserslist": [
     "last 3 chrome versions",
     "last 3 firefox versions"
-  ]
+  ],
+  "dependencies": {
+    "@types/chrome": "^0.0.86",
+    "webextension-polyfill": "^0.4.0"
+  }
 }
