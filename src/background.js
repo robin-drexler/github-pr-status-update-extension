@@ -5,39 +5,10 @@
  * - options page for token
  */
 
-const TOKEN = ``;
-
 import browser from "webextension-polyfill";
+
 import queryPr, { extractPrData } from "./query-pr.js";
-function matchUrl(url) {
-  return url.match(
-    /github\.com\/(?<owner>.*?)\/(?<repository>.*?)\/pull\/(?<number>\d+)/
-  );
-}
-
-function getStorageKey({ owner, repository, number }) {
-  return `pr/${owner}/${repository}/${number}`;
-}
-
-async function getAllPRsFromStorage() {
-  const items = await browser.storage.local.get(null);
-
-  return Object.entries(items)
-    .filter(([key, item]) => key.startsWith("pr/"))
-    .map(([key, item]) => item);
-}
-
-async function updateHandler() {
-  const [{ url, id }] = await browser.tabs.query({ active: true });
-  const match = matchUrl(url);
-
-  if (!match) {
-    browser.pageAction.hide(id);
-    return;
-  }
-
-  browser.pageAction.show(id);
-}
+import { getAllPrs, getToken, setPr } from "./storage";
 
 async function notificationClickHandler(notifictionId) {
   browser.notifications.clear(notifictionId);
@@ -46,76 +17,42 @@ async function notificationClickHandler(notifictionId) {
   await browser.windows.update(windowId, { focused: true });
 }
 
-browser.tabs.onUpdated.addListener(updateHandler);
-browser.tabs.onActivated.addListener(updateHandler);
-
-browser.pageAction.onClicked.addListener(async () => {
-  const [{ url }] = await browser.tabs.query({ active: true });
-  const match = matchUrl(url);
-
-  if (!match) {
-    return;
-  }
-
-  const { owner, repository, number } = match.groups;
-
-  const storageKey = getStorageKey({ owner, repository, number });
-  const item = await browser.storage.local.get([storageKey]);
-
-  if (Object.keys(item).length) {
-    return;
-  }
-  const pr = await queryPr({ owner, repository, number, token: TOKEN });
-
-  if (pr.errors) {
-    console.error(pr);
-    return;
-  }
-  const { status } = extractPrData(pr);
-
-  browser.storage.local.set({
-    [storageKey]: {
-      owner,
-      repository,
-      number,
-      status,
-      date: new Date().toString()
-    }
-  });
-});
-
 async function checkStatuses() {
-  const storedPRs = await getAllPRsFromStorage();
+  const storedPRs = await getAllPrs();
   storedPRs.map(async item => {
     const { owner, repository, number, status } = item;
-    const storageKey = getStorageKey({ owner, repository, number });
-    const pr = await queryPr({ owner, repository, number, token: TOKEN });
+    const token = await getToken();
 
-    if (pr.errors) {
-      return;
-    }
-    const { status: newStatus, url } = extractPrData(pr);
-    console.log(
-      "checking",
-      storageKey,
-      status,
-      newStatus,
-      status === newStatus
-    );
+    try {
+      const pr = await queryPr({ owner, repository, number, token });
+      if (pr.errors) {
+        return;
+      }
+      const { status: newStatus, url, title } = extractPrData(pr);
+      console.log(
+        "checking",
+        owner,
+        repository,
+        number,
+        status,
+        newStatus,
+        status === newStatus
+      );
 
-    if (newStatus !== status) {
-      browser.notifications.create(url, {
-        type: "basic",
-        title: "PR status changed",
-        message: `${owner}/${repository}#${number} is now ${newStatus}`,
-        iconUrl: "./img/icons/icon_256.png",
-        buttons: [{ title: "show" }],
-        requireInteraction: true
-      });
+      if (newStatus !== status) {
+        browser.notifications.create(url, {
+          type: "basic",
+          title: newStatus,
+          message: `${owner}/${repository}#${number}: ${title}`,
+          iconUrl: "./img/icons/icon_256.png",
+          buttons: [{ title: "show" }],
+          requireInteraction: true
+        });
 
-      browser.storage.local.set({
-        [storageKey]: { ...item, status: newStatus }
-      });
+        await setPr({ ...item, status: newStatus });
+      }
+    } catch (error) {
+      console.error(error);
     }
   });
 }
@@ -135,7 +72,7 @@ const DEBUGFUNCTIONS = {
     browser.notifications.create("https://google.com", {
       type: "basic",
       title: "PR status changed",
-      message: `test test `,
+      message: `test test can thi\nddd`,
       iconUrl: "./img/icons/icon_256.png",
       buttons: [{ title: "show" }],
       requireInteraction: true

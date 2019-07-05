@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build:background": "parcel build --out-dir extension/dist/background src/background.js",
-    "watch:background": "parcel watch --out-dir extension/dist/background src/background.js --no-hmr"
+    "watch:background": "parcel watch --out-dir extension/dist/background src/background.js --no-hmr",
+    "build:cs": "parcel build --out-dir extension/dist/content-script src/content-script/content-script.js",
+    "watch:cs": "parcel watch --out-dir extension/dist/content-script src/content-script/content-script.js --no-hmr",
+    "build": "rm -rf .cache extension/dist && build:cs && build:background"
   },
   "repository": {
     "type": "git",
@@ -34,6 +37,8 @@
   ],
   "dependencies": {
     "@types/firefox-webext-browser": "^67.0.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "webextension-polyfill": "^0.4.0"
   }
 }

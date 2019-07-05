@@ -7,6 +7,7 @@ export default function queryPr({ owner, repository, number, token }) {
         repository(owner: "${owner}", name: "${repository}") {
           pullRequest(number: ${number}) {
             url
+            title
             commits(last: 1) {
               nodes {
                 commit {
@@ -54,6 +55,6 @@ export function extractPrData(data) {
   return {
     url,
     status,
-    title,
+    title
   };
 }
