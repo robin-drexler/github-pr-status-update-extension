@@ -22,6 +22,9 @@ async function checkStatuses() {
   storedPRs.map(async item => {
     const { owner, repository, number, status } = item;
     const token = await getToken();
+    if (!token) {
+      return;
+    }
 
     try {
       const pr = await queryPr({ owner, repository, number, token });

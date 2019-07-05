@@ -56,6 +56,17 @@ export default function App() {
 
   async function subscribe() {
     const token = await getToken();
+
+    if (!token) {
+      alert(
+        `No token found. You can set it by debugging background page and adding:
+
+chrome.storage.local.set({['option/token']: "YOUR_TOKEN"})`
+      );
+
+      return;
+    }
+
     const match = matchPrData(window.location.href);
     if (!match) {
       return;
