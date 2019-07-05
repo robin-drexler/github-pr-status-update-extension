@@ -8,7 +8,7 @@
     "watch:background": "parcel watch --out-dir extension/dist/background src/background.js --no-hmr",
     "build:cs": "parcel build --out-dir extension/dist/content-script src/content-script/content-script.js",
     "watch:cs": "parcel watch --out-dir extension/dist/content-script src/content-script/content-script.js --no-hmr",
-    "build": "rm -rf .cache extension/dist && build:cs && build:background"
+    "build": "rm -rf .cache extension/dist && yarn build:cs && yarn build:background"
   },
   "repository": {
     "type": "git",

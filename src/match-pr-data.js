@@ -7,7 +7,6 @@ export function matchPrData(url) {
     return match;
   }
 
-  // xxx this will not work in Firefox(?) :(
   const { owner, repository, number } = match.groups;
   return { owner, repository, number };
 }
