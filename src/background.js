@@ -40,7 +40,7 @@ async function checkStatuses() {
       );
 
       if (newStatus !== status) {
-        browser.notifications.create(url, {
+        createNotification(url, {
           type: "basic",
           title: newStatus,
           message: `${owner}/${repository}#${number}: ${title}`,
@@ -67,9 +67,26 @@ checkStatuses();
 //   console.log("hello");
 // }, 5000);
 
+function createNotification(
+  id,
+  { title, message, iconUrl, type, requireInteraction, buttons }
+) {
+  const isFirefox = browser.runtime.getURL("/").startsWith("moz");
+
+  const additionalOptions = isFirefox ? {} : { requireInteraction, buttons };
+
+  return browser.notifications.create(id, {
+    message,
+    type,
+    title,
+    iconUrl,
+    ...additionalOptions
+  });
+}
+
 const DEBUGFUNCTIONS = {
   createNotification() {
-    browser.notifications.create("https://google.com", {
+    createNotification("https://google.com", {
       type: "basic",
       title: "PR status changed",
       message: `test test can thi\nddd`,
