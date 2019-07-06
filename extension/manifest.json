@@ -23,6 +23,9 @@
     }
   ],
   "background": { "scripts": ["/dist/background/background.js"] },
-
+  "options_ui": {
+    "page": "/dist/options/options.html",
+    "open_in_tab": true
+  },
   "manifest_version": 2
 }

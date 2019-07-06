@@ -39,18 +39,25 @@ export function removePr({ owner, repository, number }) {
 }
 
 export async function getToken() {
-  const token = await browser.storage.local.get(["option/token"]);
-  if (!Object.keys(token).length) {
-    console.log(
-      `No token found. You can set it by debugging background page and adding`
-    );
-    console.log(`chrome.storage.local.set({['option/token']: "YOUR_TOKEN"})`);
-    return null;
-  }
+  const { token } = await getOptions();
+  return token;
+}
 
-  return token["option/token"];
+export async function setToken(token) {
+  return patchOptions({ token });
 }
 
 function getStorageKey({ owner, repository, number }) {
   return `pr/${owner}/${repository}/${number}`;
+}
+
+async function patchOptions(options) {
+  const currentOptions = await getOptions();
+  return browser.storage.local.set({
+    options: { ...currentOptions, ...options }
+  });
+}
+async function getOptions() {
+  const result = await browser.storage.local.get(["options"]);
+  return result.options || {};
 }
