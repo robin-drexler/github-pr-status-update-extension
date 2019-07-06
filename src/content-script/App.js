@@ -56,14 +56,10 @@ export default function App() {
 
   async function subscribe() {
     const token = await getToken();
+    console.log("TOKEN", !token);
 
     if (!token) {
-      alert(
-        `No token found. You can set it by debugging background page and adding:
-
-chrome.storage.local.set({['option/token']: "YOUR_TOKEN"})`
-      );
-
+      chrome.runtime.sendMessage({ method: "openOptionsPage" });
       return;
     }
 

@@ -10,6 +10,12 @@ import browser from "webextension-polyfill";
 import queryPr, { extractPrData } from "./query-pr.js";
 import { getAllPrs, getToken, setPr } from "./storage";
 
+browser.runtime.onMessage.addListener(request => {
+  if (request.method === "openOptionsPage") {
+    browser.runtime.openOptionsPage();
+  }
+});
+
 async function notificationClickHandler(notifictionId) {
   browser.notifications.clear(notifictionId);
 
