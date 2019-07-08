@@ -1,10 +1,3 @@
-/**
- * Todo:
- *
- * - remove merged PRs
- * - options page for token
- */
-
 import browser from "webextension-polyfill";
 
 import queryPr, { extractPrData } from "./query-pr.js";
@@ -15,6 +8,16 @@ browser.runtime.onMessage.addListener(request => {
     browser.runtime.openOptionsPage();
   }
 });
+
+function getIconForStatus(status) {
+  const iconName = status.toLowerCase();
+
+  if (["success", "failure", "pending"].includes(iconName)) {
+    return `./img/${iconName}.png`;
+  }
+
+  return `./img/icon_256.png`;
+}
 
 async function notificationClickHandler(notifictionId) {
   browser.notifications.clear(notifictionId);
@@ -53,7 +56,7 @@ async function checkStatuses() {
           type: "basic",
           title: newStatus,
           message: `${owner}/${repository}#${number}: ${title}`,
-          iconUrl: "./img/icons/icon_256.png",
+          iconUrl: getIconForStatus(newStatus),
           buttons: [{ title: "show" }],
           requireInteraction: true
         });
@@ -81,10 +84,6 @@ browser.notifications.onClicked.addListener(notificationClickHandler);
 window.setInterval(checkStatuses, 30000);
 checkStatuses();
 
-// window.setInterval(() => {
-//   console.log("hello");
-// }, 5000);
-
 function createNotification(
   id,
   { title, message, iconUrl, type, requireInteraction, buttons }
@@ -108,7 +107,7 @@ const DEBUGFUNCTIONS = {
       type: "basic",
       title: "PR status changed",
       message: `test test can thi\nddd`,
-      iconUrl: "./img/icons/icon_256.png",
+      iconUrl: "./img/success.png",
       buttons: [{ title: "show" }],
       requireInteraction: true
     });

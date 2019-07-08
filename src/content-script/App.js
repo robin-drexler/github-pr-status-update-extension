@@ -56,7 +56,6 @@ export default function App() {
 
   async function subscribe() {
     const token = await getToken();
-    console.log("TOKEN", !token);
 
     if (!token) {
       chrome.runtime.sendMessage({ method: "openOptionsPage" });
