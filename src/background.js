@@ -8,7 +8,7 @@
 import browser from "webextension-polyfill";
 
 import queryPr, { extractPrData } from "./query-pr.js";
-import { getAllPrs, getToken, setPr } from "./storage";
+import { getAllPrs, getToken, setPr, removePr } from "./storage";
 
 browser.runtime.onMessage.addListener(request => {
   if (request.method === "openOptionsPage") {
@@ -37,9 +37,9 @@ async function checkStatuses() {
       if (pr.errors) {
         return;
       }
-      const { status: newStatus, url, title } = extractPrData(pr);
+      const { status: newStatus, url, title, state } = extractPrData(pr);
       console.log(
-        "checking",
+        "Checked PR",
         owner,
         repository,
         number,
@@ -59,6 +59,15 @@ async function checkStatuses() {
         });
 
         await setPr({ ...item, status: newStatus });
+      }
+
+      if (state !== "OPEN") {
+        console.log("Deleting PR because closed or merged", {
+          owner,
+          repository,
+          number
+        });
+        await removePr({ owner, repository, number });
       }
     } catch (error) {
       console.error(error);
