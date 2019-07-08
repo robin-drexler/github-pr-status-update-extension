@@ -10,7 +10,7 @@
     "watch:cs": "parcel watch --out-dir extension/dist/content-script src/content-script/content-script.js --no-hmr",
     "build:options": "parcel build --out-dir extension/dist/options --public-url /dist/options/ src/options/options.html",
     "watch:options": "parcel watch --out-dir extension/dist/options --public-url /dist/options/ src/options/options.html --no-hmr",
-    "build": "rm -rf .cache extension/dist && yarn build:cs && yarn build:background && yarn build build:options"
+    "build": "rm -rf .cache extension/dist && yarn build:cs && yarn build:background && yarn build:options"
   },
   "repository": {
     "type": "git",
