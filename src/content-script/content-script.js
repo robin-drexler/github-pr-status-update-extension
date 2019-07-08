@@ -20,7 +20,7 @@ async function bootstrap() {
     return;
   }
 
-  if (shouldRender) {
+  if (shouldRender && matchPrData(window.location.href)) {
     if (rootNode) {
       rootNode.remove();
     }
