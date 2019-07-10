@@ -1,11 +1,11 @@
 {
-  "name": "Github PR notifier",
+  "name": "Status Update Notifier for Github",
   "version": "0.0.1",
   "icons": {
     "256": "/img/icon_256.png"
   },
 
-  "description": "Yay, I'm so useless.",
+  "description": "Shows notifications when Github commit status changes",
   "permissions": [
     "https://github.com/*",
     "https://*.github.com/*",
