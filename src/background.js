@@ -13,7 +13,7 @@ function getIconForStatus(status) {
   const iconName = status.toLowerCase();
 
   if (["success", "failure", "pending"].includes(iconName)) {
-    return `./img/${iconName}.png`;
+    return `./img/${iconName}_notification.png`;
   }
 
   return `./img/icon_256.png`;
@@ -107,7 +107,7 @@ const DEBUGFUNCTIONS = {
       type: "basic",
       title: "PR status changed",
       message: `test test can thi\nddd`,
-      iconUrl: "./img/success.png",
+      iconUrl: getIconForStatus("pending"),
       buttons: [{ title: "show" }],
       requireInteraction: true
     });
