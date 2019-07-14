@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:background": "parcel build --out-dir extension/dist/background src/background.js",
+    "build:background": "parcel build --no-minify --out-dir extension/dist/background src/background.js",
     "watch:background": "parcel watch --out-dir extension/dist/background src/background.js --no-hmr",
-    "build:cs": "parcel build --out-dir extension/dist/content-script src/content-script/content-script.js",
+    "build:cs": "parcel build --no-minify --out-dir extension/dist/content-script src/content-script/content-script.js",
     "watch:cs": "parcel watch --out-dir extension/dist/content-script src/content-script/content-script.js --no-hmr",
-    "build:options": "parcel build --out-dir extension/dist/options --public-url /dist/options/ src/options/options.html",
+    "build:options": "parcel build --no-minify --out-dir extension/dist/options --public-url /dist/options/ src/options/options.html",
     "watch:options": "parcel watch --out-dir extension/dist/options --public-url /dist/options/ src/options/options.html --no-hmr",
     "build": "rm -rf .cache extension/dist && yarn build:cs && yarn build:background && yarn build:options"
   },

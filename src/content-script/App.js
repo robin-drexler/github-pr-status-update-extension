@@ -104,7 +104,7 @@ export default function App() {
   return (
     <>
       <div style={{ padding: "5px" }} className="text-bold">
-        CI - status notifications
+        PR status change notifications
       </div>
 
       {isSubscribed ? (
