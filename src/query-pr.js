@@ -48,7 +48,7 @@ export function extractPrData(data) {
     }
   } = data;
 
-  const status = commit.state ? commit.status.state : null;
+  const status = commit.status ? commit.status.state : null;
 
   return {
     url,
