@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { matchPrData } from "../match-pr-data";
-import { getPr, getToken, setPr, removePr } from "../storage";
-import queryPr, { extractPrData } from "../query-pr";
+import { getPr, getToken, removePr } from "../storage";
+import { addPrFromUrl } from "../add-pr";
 
 function SubscribeIcon() {
   return (
@@ -62,26 +62,10 @@ export default function App() {
       return;
     }
 
-    const match = matchPrData(window.location.href);
-    if (!match) {
+    const pr = await addPrFromUrl({ url: window.location.href, token });
+    if (!pr) {
       return;
     }
-    const { owner, repository, number } = match;
-    const pr = await queryPr({ owner, repository, number, token });
-
-    if (pr.errors) {
-      console.error(pr);
-      return;
-    }
-    const { status } = extractPrData(pr);
-
-    await setPr({
-      owner,
-      repository,
-      number,
-      status,
-      date: new Date().toString()
-    });
 
     updateSubcribeState();
   }

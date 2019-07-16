@@ -11,7 +11,8 @@
     "https://*.github.com/*",
     "tabs",
     "storage",
-    "notifications"
+    "notifications",
+    "webRequest"
   ],
   "content_scripts": [
     {

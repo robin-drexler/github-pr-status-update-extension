@@ -2,12 +2,34 @@ import browser from "webextension-polyfill";
 
 import queryPr, { extractPrData } from "./query-pr.js";
 import { getAllPrs, getToken, setPr, removePr } from "./storage";
+import { addPrFromUrl } from "./add-pr.js";
 
 browser.runtime.onMessage.addListener(request => {
   if (request.method === "openOptionsPage") {
     browser.runtime.openOptionsPage();
   }
 });
+
+/**
+ * Whenever a new PR is opened, subscribe automatically
+ * Also set initial status to pending to avoid an immediate notification
+ * This might become a setting in the future
+ */
+browser.webRequest.onBeforeRedirect.addListener(
+  async details => {
+    console.log("Adding ", details.redirectUrl, "after PR was opened");
+    const token = await getToken();
+    if (!token) {
+      // maybe open options page?
+      // only with disable option otherwise it'd be way too annoying
+      return;
+    }
+    addPrFromUrl({ url: details.redirectUrl, initialStatus: "PENDING", token });
+  },
+  {
+    urls: ["https://github.com/*/pull/*"]
+  }
+);
 
 function getIconForStatus(status) {
   const iconName = status.toLowerCase();
@@ -51,7 +73,8 @@ async function checkStatuses() {
         status === newStatus
       );
 
-      if (newStatus !== status) {
+      // Do not consider `null` i.e. no status as change
+      if (newStatus && newStatus !== status) {
         createNotification(url, {
           type: "basic",
           title: newStatus,

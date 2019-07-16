@@ -41,18 +41,14 @@ export function extractPrData(data) {
           title,
           state,
           commits: {
-            nodes: [
-              {
-                commit: {
-                  status: { state: status }
-                }
-              }
-            ]
+            nodes: [{ commit }]
           }
         }
       }
     }
   } = data;
+
+  const status = commit.state ? commit.status.state : null;
 
   return {
     url,
