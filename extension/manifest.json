@@ -1,6 +1,6 @@
 {
   "name": "Status Update Notifier for Github",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "icons": {
     "256": "/img/icon_256.png"
   },
