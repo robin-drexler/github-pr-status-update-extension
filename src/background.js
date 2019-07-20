@@ -3,6 +3,7 @@ import browser from "webextension-polyfill";
 import queryPr, { extractPrData } from "./query-pr.js";
 import { getAllPrs, getToken, setPr, removePr } from "./storage";
 import { addPrFromUrl } from "./add-pr.js";
+import { matchPrData } from "./match-pr-data.js";
 
 browser.runtime.onMessage.addListener(request => {
   if (request.method === "openOptionsPage") {
@@ -17,13 +18,22 @@ browser.runtime.onMessage.addListener(request => {
  */
 browser.webRequest.onBeforeRedirect.addListener(
   async details => {
-    console.log("Adding ", details.redirectUrl, "after PR was opened");
+    // Sending a review also does a redirect
+    // In this case we don't want to auto-subscribe
+    // We determine this by checking if the original URL already is a PR
+    // It cannot be a new one if it already exists :)
+    if (matchPrData(details.originUrl)) {
+      return;
+    }
+
     const token = await getToken();
     if (!token) {
       // maybe open options page?
       // only with disable option otherwise it'd be way too annoying
       return;
     }
+    console.log("Adding ", details.redirectUrl, "after PR was opened");
+
     addPrFromUrl({ url: details.redirectUrl, initialStatus: "PENDING", token });
   },
   {
