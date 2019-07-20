@@ -3,7 +3,6 @@ import browser from "webextension-polyfill";
 import queryPr, { extractPrData } from "./query-pr.js";
 import { getAllPrs, getToken, setPr, removePr } from "./storage";
 import { addPrFromUrl } from "./add-pr.js";
-import { matchPrData } from "./match-pr-data.js";
 
 browser.runtime.onMessage.addListener(request => {
   if (request.method === "openOptionsPage") {
@@ -22,7 +21,7 @@ browser.webRequest.onBeforeRedirect.addListener(
     // In this case we don't want to auto-subscribe
     // We determine this by checking if the original URL already is a PR
     // It cannot be a new one if it already exists :)
-    if (matchPrData(details.originUrl)) {
+    if (!details.url.match(/pull\/create/)) {
       return;
     }
 
