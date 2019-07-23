@@ -1,15 +1,14 @@
 import browser from "webextension-polyfill";
 
 export async function getPr({ owner, repository, number }) {
-  const item = await browser.storage.local.get([
-    getStorageKey({ owner, repository, number })
-  ]);
+  const key = getStorageKey({ owner, repository, number });
+  const item = await browser.storage.local.get([key]);
 
   if (!Object.keys(item).length) {
     return null;
   }
 
-  return item;
+  return item[key];
 }
 
 export async function getAllPrs() {

@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "jest",
+    "watch": "npm-run-all -p 'watch:*'",
     "build:background": "parcel build --no-minify --out-dir extension/dist/background src/background.js",
     "watch:background": "parcel watch --out-dir extension/dist/background src/background.js --no-hmr",
     "build:cs": "parcel build --no-minify --out-dir extension/dist/content-script src/content-script/content-script.js",
@@ -22,11 +24,22 @@
     "url": "https://github.com/robin-drexler/Simple-Chrome-Extension-Content-Script-Skeleton/issues"
   },
   "homepage": "https://github.com/robin-drexler/Simple-Chrome-Extension-Content-Script-Skeleton",
+  "dependencies": {
+    "@types/firefox-webext-browser": "^67.0.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "webextension-polyfill": "^0.4.0"
+  },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
     "babel-jest": "^24.8.0",
+    "fetch-mock": "^7.3.9",
+    "graphql": "^14.4.2",
+    "graphql-tag": "^2.10.1",
     "jest": "^24.8.0",
+    "node-fetch": "^2.6.0",
     "npm-run-all": "^4.1.5",
     "parcel": "^1.12.3",
     "prettier": "^1.18.2"
@@ -35,10 +48,5 @@
     "last 3 chrome versions",
     "last 3 firefox versions"
   ],
-  "dependencies": {
-    "@types/firefox-webext-browser": "^67.0.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "webextension-polyfill": "^0.4.0"
-  }
+  "jest": {}
 }

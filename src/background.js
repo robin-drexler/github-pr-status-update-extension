@@ -59,6 +59,7 @@ async function notificationClickHandler(notifictionId) {
 
 async function checkStatuses() {
   const storedPRs = await getAllPrs();
+
   storedPRs.map(async item => {
     const { owner, repository, number, status } = item;
     const token = await getToken();
@@ -77,6 +78,7 @@ async function checkStatuses() {
         owner,
         repository,
         number,
+        state,
         status,
         newStatus,
         status === newStatus
@@ -123,7 +125,6 @@ function createNotification(
   const isFirefox = browser.runtime.getURL("/").startsWith("moz");
 
   const additionalOptions = isFirefox ? {} : { requireInteraction, buttons };
-
   return browser.notifications.create(id, {
     message,
     type,
