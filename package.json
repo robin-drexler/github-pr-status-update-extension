@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "jest",
     "watch": "npm-run-all -p 'watch:*'",
     "build:background": "parcel build --no-minify --out-dir extension/dist/background src/background.js",
     "watch:background": "parcel watch --out-dir extension/dist/background src/background.js --no-hmr",
